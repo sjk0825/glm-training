@@ -1,0 +1,51 @@
+model:
+  model_name: "THUDM/GLM-4-7b-chat"
+  max_seq_length: 2048
+  load_in_4bit: true
+  dtype: null
+
+lora:
+  r: 16
+  lora_alpha: 16
+  lora_dropout: 0.0
+  target_modules:
+    - query_key_value
+    - dense
+    - dense_h_to_4h
+    - dense_4h_to_h
+  bias: none
+  task_type: CAUSAL_LM
+
+train:
+  output_dir: ./outputs/glm-4.7-finetune
+  num_train_epochs: 3
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 4
+  learning_rate: 2.0e-4
+  warmup_ratio: 0.1
+  logging_steps: 10
+  save_steps: 100
+  save_total_limit: 2
+  max_grad_norm: 1.0
+  seed: 42
+  dataloader_num_workers: 2
+  remove_unused_columns: false
+  label_names:
+    - labels
+
+wandb:
+  project: glm-4.7-finetune
+  entity: null
+  name: glm-4.7-rtx4090-24gb
+  tags:
+    - glm-4.7
+    - qlora
+    - rtx4090
+    - coding
+  notes: "Fine-tuning GLM-4.7 on RTX 4090 24GB using QLoRA"
+
+data:
+  dataset_name: null
+  dataset_config: null
+  dataset_split: train
+  text_field: text
